@@ -23,6 +23,7 @@
             background: linear-gradient(135deg, var(--dark) 0%, #1a1a3a 50%, #2d1b5a 100%);
             color: white;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         /* ==================== SURPRISE SCREEN ==================== */
@@ -155,17 +156,14 @@
             50% { transform: translateY(-100px) translateX(50px); opacity: 0.3; }
         }
 
-        /* ==================== MAIN CONTENT ==================== */
-        .main-content {
-            position: relative;
-            z-index: 10;
-        }
-
+        /* ==================== HERO SECTION ==================== */
         .hero {
+            position: relative;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 10;
             padding: 40px 20px;
             text-align: center;
         }
@@ -173,6 +171,11 @@
         .hero-content {
             max-width: 900px;
             animation: slideUp 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(100px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .birthday-title {
@@ -209,6 +212,7 @@
             width: 320px;
             height: 320px;
             margin: 0 auto 60px;
+            perspective: 1000px;
             animation: fadeInDelay 1.5s ease-out 0.6s both;
         }
 
@@ -216,12 +220,42 @@
             width: 100%;
             height: 100%;
             position: relative;
+            transform-style: preserve-3d;
             animation: float3d 6s ease-in-out infinite;
         }
 
         @keyframes float3d {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+            0%, 100% { transform: rotateX(0deg) rotateY(0deg) translateY(0px); }
+            25% { transform: rotateX(2deg) rotateY(3deg) translateY(-15px); }
+            50% { transform: rotateX(-2deg) rotateY(-3deg) translateY(0px); }
+            75% { transform: rotateX(2deg) rotateY(-2deg) translateY(-15px); }
+        }
+
+        .image-frame::before {
+            content: '';
+            position: absolute;
+            inset: -25px;
+            background: conic-gradient(from 45deg, var(--primary), var(--accent), var(--secondary), var(--primary));
+            border-radius: 25px;
+            z-index: -1;
+            opacity: 0.9;
+            animation: spin 8s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .image-frame::after {
+            content: '';
+            position: absolute;
+            inset: -20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 25px;
+            z-index: -2;
+            filter: blur(25px);
+            opacity: 0.7;
         }
 
         .image-content {
@@ -229,14 +263,21 @@
             height: 100%;
             border-radius: 20px;
             overflow: hidden;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(139, 92, 246, 0.1));
             border: 2px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
         }
 
         .image-content img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 18px;
         }
 
         .message-box {
@@ -246,6 +287,13 @@
             background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(139, 92, 246, 0.05));
             border: 2px solid rgba(0, 217, 255, 0.3);
             border-radius: 20px;
+            transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .message-box:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 217, 255, 0.2);
         }
 
         .message-text {
@@ -277,6 +325,156 @@
             box-shadow: 0 15px 40px rgba(0, 217, 255, 0.5);
         }
 
+        /* ==================== VIDEO SECTION ==================== */
+        .video-section {
+            position: relative;
+            z-index: 10;
+            padding: 100px 40px;
+            background: linear-gradient(180deg, rgba(45, 27, 90, 0.5) 0%, rgba(26, 26, 46, 0.8) 100%);
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-container {
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        .video-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            text-align: center;
+            margin-bottom: 60px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 50%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .video-player {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(139, 92, 246, 0.05));
+            border: 2px solid rgba(0, 217, 255, 0.3);
+            border-radius: 30px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-player video {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.2);
+            display: block;
+            max-width: 100%;
+        }
+
+        /* ==================== AUDIO SECTION ==================== */
+        .audio-section {
+            position: relative;
+            z-index: 10;
+            padding: 100px 40px;
+            background: linear-gradient(180deg, rgba(26, 26, 46, 0.8) 0%, rgba(15, 14, 30, 0.8) 100%);
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .audio-container {
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+            animation: slideUp 1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        .audio-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            text-align: center;
+            margin-bottom: 60px;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 50%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .audio-player {
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(139, 92, 246, 0.05));
+            border: 2px solid rgba(0, 217, 255, 0.3);
+            border-radius: 30px;
+            padding: 50px 40px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .audio-visualizer {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 6px;
+            height: 80px;
+            margin: 35px 0;
+        }
+
+        .bar {
+            width: 8px;
+            background: linear-gradient(180deg, var(--primary), var(--accent));
+            border-radius: 4px;
+            animation: audioBar 0.4s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.6);
+        }
+
+        @keyframes audioBar {
+            0%, 100% { height: 15px; }
+            50% { height: 60px; }
+        }
+
+        .bar:nth-child(1) { animation-delay: 0s; }
+        .bar:nth-child(2) { animation-delay: 0.08s; }
+        .bar:nth-child(3) { animation-delay: 0.16s; }
+        .bar:nth-child(4) { animation-delay: 0.24s; }
+        .bar:nth-child(5) { animation-delay: 0.32s; }
+        .bar:nth-child(6) { animation-delay: 0.4s; }
+        .bar:nth-child(7) { animation-delay: 0.48s; }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            cursor: pointer;
+            overflow: hidden;
+            margin: 25px 0;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            width: 0%;
+            border-radius: 3px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
         /* ==================== CONFETTI ==================== */
         .confetti {
             position: fixed;
@@ -292,6 +490,8 @@
             .image-container { width: 250px; height: 250px; }
             .birthday-title { font-size: 3rem; }
             .message-text { font-size: 1.3rem; }
+            .video-section { min-height: auto; padding: 60px 20px; }
+            .audio-section { min-height: auto; padding: 60px 20px; }
         }
     </style>
 </head>
@@ -313,34 +513,77 @@
         </div>
     </div>
 
-    <!-- MAIN CONTENT -->
-    <div class="main-content">
-        <section class="hero" id="home">
-            <div class="hero-content">
-                <h1 class="birthday-title">HAPPY BIRTHDAY!</h1>
-                <p class="subtitle">A Special Day For Someone Special</p>
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1 class="birthday-title">HAPPY BIRTHDAY!</h1>
+            <p class="subtitle">A Special Day For Someone Special</p>
 
-                <div class="image-container">
-                    <div class="image-frame">
-                        <div class="image-content">
-                            <img src="pic.jpg" alt="Birthday Boy" />
-                        </div>
+            <div class="image-container">
+                <div class="image-frame">
+                    <div class="image-content">
+                        <img src="pic.jpg" alt="Birthday Boy" />
                     </div>
                 </div>
+            </div>
 
-                <div class="message-box">
-                    <p class="message-text">
-                        Today we celebrate <span class="message-highlight">you</span> and all the joy you bring to our lives. 
-                        May this year be filled with <span class="message-highlight">beautiful moments</span>, 
-                        <span class="message-highlight">endless laughter</span>, and 
-                        <span class="message-highlight">cherished memories</span>.
-                    </p>
+            <div class="message-box">
+                <p class="message-text">
+                    Today we celebrate <span class="message-highlight">you</span> and all the joy you bring to our lives. 
+                    May this year be filled with <span class="message-highlight">beautiful moments</span>, 
+                    <span class="message-highlight">endless laughter</span>, and 
+                    <span class="message-highlight">cherished memories</span>.
+                </p>
+            </div>
+
+            <button class="btn" onclick="createConfetti()">🎊 CELEBRATE</button>
+        </div>
+    </section>
+
+    <!-- VIDEO SECTION -->
+    <section class="video-section" id="video">
+        <div class="video-container">
+            <h2 class="video-title">🎬 Birthday Video 🎬</h2>
+            <div class="video-player">
+                <video loop muted autoplay playsinline>
+                    <source src="video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </section>
+
+    <!-- AUDIO SECTION -->
+    <section class="audio-section" id="audio">
+        <div class="audio-container">
+            <h2 class="audio-title">🎵 Birthday Song 🎵</h2>
+            <div class="audio-player">
+                <div class="audio-visualizer">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
                 </div>
 
-                <button class="btn" onclick="createConfetti()">🎊 CELEBRATE</button>
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+
+                <div class="time-display">
+                    <span id="currentTime">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+
+                <audio id="birthdayAudio" loop style="margin-top: 30px;">
+                    <source src="simi.mp3" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 
     <script>
         // Create particles
@@ -399,11 +642,35 @@
             }
         }
 
-        // Auto play audio
+        // Audio player
+        const audio = document.getElementById('birthdayAudio');
+
+        audio.addEventListener('loadedmetadata', () => {
+            document.getElementById('duration').textContent = formatTime(audio.duration);
+        });
+
+        audio.addEventListener('timeupdate', () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            document.getElementById('progress').style.width = progress + '%';
+            document.getElementById('currentTime').textContent = formatTime(audio.currentTime);
+        });
+
+        function formatTime(seconds) {
+            if (isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // Progress bar click to seek
+        document.querySelector('.progress-bar')?.addEventListener('click', function(e) {
+            if (!audio.duration) return;
+            const percent = e.offsetX / this.offsetWidth;
+            audio.currentTime = percent * audio.duration;
+        });
+
+        // Auto play audio after surprise opens
         function autoPlayAudio() {
-            // Add audio support if you have simi.mp3
-            const audio = new Audio('simi.mp3');
-            audio.loop = true;
             audio.play().catch(err => console.log('Audio not available'));
         }
 
