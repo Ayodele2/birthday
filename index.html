@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00d9ff;
+            --secondary: #8b5cf6;
+            --accent: #ffd700;
+            --dark: #0f0e1e;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, #1a1a3a 50%, #2d1b5a 100%);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* ==================== SURPRISE SCREEN ==================== */
+        .surprise-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #0f0e1e 0%, #1a1a3a 50%, #2d1b5a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .surprise-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-100vh);
+        }
+
+        .surprise-box {
+            width: 300px;
+            height: 300px;
+            cursor: pointer;
+            position: relative;
+            animation: boxFloat 4s ease-in-out infinite;
+        }
+
+        .surprise-box:hover {
+            animation: boxBounce 0.6s ease-in-out infinite;
+        }
+
+        .surprise-box.clicked {
+            animation: boxExplode 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes boxFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-30px); }
+        }
+
+        @keyframes boxBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-50px) scale(1.1); }
+        }
+
+        @keyframes boxExplode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0) rotateZ(720deg); opacity: 0; }
+        }
+
+        .box-emoji {
+            font-size: 8rem;
+            text-align: center;
+            animation: boxPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes boxPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .surprise-title {
+            font-size: 5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffd700, #00d9ff, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: titlePop 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes titlePop {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .surprise-subtitle {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 40px;
+            letter-spacing: 2px;
+            animation: slideInUp 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s both;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .click-text {
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-top: 40px;
+            animation: pulse 1.5s ease-in-out infinite;
+            font-weight: 600;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* ==================== PARTICLES ==================== */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: radial-gradient(circle, var(--accent), transparent);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0.6; }
+            50% { transform: translateY(-100px) translateX(50px); opacity: 0.3; }
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .main-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            animation: slideUp 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .birthday-title {
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 50%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(0, 217, 255, 0.4)); }
+            50% { filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.8)); }
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 60px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            animation: fadeInDelay 1.5s ease-out 0.3s both;
+        }
+
+        @keyframes fadeInDelay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .image-container {
+            width: 320px;
+            height: 320px;
+            margin: 0 auto 60px;
+            animation: fadeInDelay 1.5s ease-out 0.6s both;
+        }
+
+        .image-frame {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            animation: float3d 6s ease-in-out infinite;
+        }
+
+        @keyframes float3d {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .image-content {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .image-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .message-box {
+            max-width: 700px;
+            margin: 0 auto 50px;
+            padding: 50px 40px;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1), rgba(139, 92, 246, 0.05));
+            border: 2px solid rgba(0, 217, 255, 0.3);
+            border-radius: 20px;
+        }
+
+        .message-text {
+            font-size: 1.6rem;
+            line-height: 2;
+            color: var(--accent);
+        }
+
+        .message-highlight {
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0, 217, 255, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 217, 255, 0.5);
+        }
+
+        /* ==================== CONFETTI ==================== */
+        .confetti {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        @media (max-width: 768px) {
+            .surprise-title { font-size: 3rem; }
+            .surprise-subtitle { font-size: 1.2rem; }
+            .surprise-box { width: 220px; height: 220px; }
+            .box-emoji { font-size: 6rem; }
+            .image-container { width: 250px; height: 250px; }
+            .birthday-title { font-size: 3rem; }
+            .message-text { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- SURPRISE SPLASH SCREEN -->
+    <div class="surprise-screen" id="surpriseScreen">
+        <div style="text-align: center;">
+            <h1 class="surprise-title">SURPRISE! 🎉</h1>
+            <p class="surprise-subtitle">CLICK THE BOX</p>
+
+            <div class="surprise-box" id="surpriseBox" onclick="openSurprise()">
+                <div class="box-emoji">🎁</div>
+            </div>
+
+            <p class="click-text">👆 CLICK ME! ✨</p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1 class="birthday-title">HAPPY BIRTHDAY!</h1>
+                <p class="subtitle">A Special Day For Someone Special</p>
+
+                <div class="image-container">
+                    <div class="image-frame">
+                        <div class="image-content">
+                            <img src="pic.jpg" alt="Birthday Boy" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-box">
+                    <p class="message-text">
+                        Today we celebrate <span class="message-highlight">you</span> and all the joy you bring to our lives. 
+                        May this year be filled with <span class="message-highlight">beautiful moments</span>, 
+                        <span class="message-highlight">endless laughter</span>, and 
+                        <span class="message-highlight">cherished memories</span>.
+                    </p>
+                </div>
+
+                <button class="btn" onclick="createConfetti()">🎊 CELEBRATE</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Create particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Open surprise and show main content
+        function openSurprise() {
+            const box = document.getElementById('surpriseBox');
+            const splash = document.getElementById('surpriseScreen');
+
+            box.classList.add('clicked');
+            createConfetti();
+
+            setTimeout(() => {
+                splash.classList.add('hidden');
+                autoPlayAudio();
+            }, 800);
+        }
+
+        // Create confetti
+        function createConfetti() {
+            const emojis = ['🎉', '🎊', '🎈', '✨', '💫', '⭐', '🎁', '💝', '🎀', '👑'];
+
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                confetti.style.left = Math.random() * window.innerWidth + 'px';
+                confetti.style.top = '-20px';
+                confetti.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+
+                const duration = Math.random() * 2 + 2;
+                const xOffset = (Math.random() - 0.5) * 500;
+                const rotation = Math.random() * 720;
+
+                confetti.animate([
+                    { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                    { transform: `translateY(${window.innerHeight + 50}px) translateX(${xOffset}px) rotate(${rotation}deg)`, opacity: 0 }
+                ], {
+                    duration: duration * 1000,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                });
+
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), duration * 1000);
+            }
+        }
+
+        // Auto play audio
+        function autoPlayAudio() {
+            // Add audio support if you have simi.mp3
+            const audio = new Audio('simi.mp3');
+            audio.loop = true;
+            audio.play().catch(err => console.log('Audio not available'));
+        }
+
+        // Initialize
+        createParticles();
+    </script>
+</body>
+</html>
